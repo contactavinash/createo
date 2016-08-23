@@ -1,0 +1,40 @@
+.loader {
+    width: 100%;
+    position: fixed;
+    background: rgba(255, 255, 255, 0.75);
+    z-index: 1;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    padding: 10%;
+    font-size: 51px;
+    color: white;
+    text-align: center;
+}
+.fixed-table-body {
+    height: auto;
+}
+.fixed-table-body .table {
+    margin-bottom: 0px;
+}
+.btn.chintantablesearchgo {
+    height: 34px;
+    margin-right: 10px;
+}
+.margined {
+    margin: 10px 23px 0 0;
+}
+.table .btn+.btn {
+    margin-left: 4px;
+}
+.table .btn {
+    padding: 2px 10px;
+}
+body,
+#content-container {
+    background-color: #F0EFEF;
+    color: #515151;
+}
+.text-pad {
+    padding: 6px 10px;
+}
