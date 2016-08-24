@@ -21,6 +21,12 @@ class Json extends CI_Controller
 		$this->load->view("redirect",$data);
     }
     
+    public function otherappandstest()
+    {
+        $id=$this->input->get('id');
+        $otherappendsreturn=$this->admin_model->otherappends($id);
+    }
+    
 }
 //EndOfFile
 ?>

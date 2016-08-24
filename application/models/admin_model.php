@@ -1139,262 +1139,47 @@ class Json extends CI_Controller
     
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-	public function createfield($table,$sqlname,$sqltype,$isprimary,$defaultvalue,$isnull,$autoincrement,$title,$type,$placeholder,$showinview)
-	{
-		$data  = array(
-			'table' => $table,
-			'sqlname' => $sqlname,
-			'sqltype' => $sqltype,
-			'isprimary' => $isprimary,
-			'defaultvalue' => $defaultvalue,
-			'isnull' => $isnull,
-			'autoincrement' => $autoincrement,
-			'title' => $title,
-			'type' => $type,
-			'placeholder' => $placeholder,
-			'showinview' => $showinview
-			
-		);
-		$query=$this->db->insert( 'field', $data );
-		$id=$this->db->insert_id();
+    public function otherappends($id)
+    {
+        $projectdetails=$this->project_model->beforeedit($id);
+        $databasename=$projectdetails->databasename;
+        $projectname=ucfirst ($projectdetails->name);
+        $googleid=$projectdetails->googleid;
+        $googlesecret=$projectdetails->googlesecret;
+        $facebookid=$projectdetails->facebookid;
+        $facebooksecret=$projectdetails->facebooksecret;
         
-		if(!$query)
-			return  0;
-		else
-			return  1;
-	}
-    
-	public function createfieldselectfield($name,$value,$fieldid)
-	{
-		$data  = array(
-			'name' => $name,
-			'value' => $value,
-			'field' => $fieldid
-		);
-		$query=$this->db->insert( 'fieldselectfield', $data );
-		$id=$this->db->insert_id();
+        $path_to_file = $_SERVER["SCRIPT_FILENAME"];
+        $path_to_file=substr($path_to_file,0,-9);
         
-		if(!$query)
-			return  0;
-		else
-			return  1;
-	}
-    
-	public function createfieldvalidation($validation,$fieldid)
-	{
-		$data  = array(
-			'validation' => $validation,
-			'field' => $fieldid
-		);
-		$query=$this->db->insert( 'fieldvalidation', $data );
-		$id=$this->db->insert_id();
+        //hybridauth credentials library file
+        $path_to_file=$path_to_file.'admins/'.$databasename.'/application/config/hybridauthlib.php';
+        $file_contents = file_get_contents($path_to_file);
+        $file_contents = str_replace("183458610887-ebv9fjk75daruf33qc59fjn16secjo6t.apps.googleusercontent.com",$googleid,$file_contents);
+        $file_contents = str_replace("nQ8QtVjvB0Zx5JEZQB6ssA-I",$googlesecret,$file_contents);
+        $file_contents = str_replace("263699107356388",$facebookid,$file_contents);
+        $file_contents = str_replace("b7e7da8e232a4e85c404cfa4a21685d7",$facebooksecret,$file_contents);
+        file_put_contents($path_to_file,$file_contents);
         
-		if(!$query)
-			return  0;
-		else
-			return  1;
-	}
-    
-	public function editfieldselectfield($fieldid,$name,$value,$fieldselectfieldid)
-	{
-		$data  = array(
-			'name' => $name,
-			'value' => $value,
-			'field' => $fieldid
-		);
-		$this->db->where( 'id', $fieldselectfieldid );
-		$query=$this->db->update( 'fieldselectfield', $data );
+        //header file change with name of project
+        $path_to_file=$path_to_file.'admins/'.$databasename.'/application/views/backend/header.php';
+        $file_contents = file_get_contents($path_to_file);
+        $file_contents = str_replace("CreateO",$projectname,$file_contents);
+        file_put_contents($path_to_file,$file_contents);
         
-		return 1;
-	}
-    
-    
-	public function editfieldvalidation($fieldid,$validation,$fieldvalidationid)
-	{
-		$data  = array(
-			'validation' => $validation,
-			'field' => $fieldid
-		);
-		$this->db->where( 'id', $fieldvalidationid );
-		$query=$this->db->update( 'fieldvalidation', $data );
+        //database file change
+        $path_to_file=$path_to_file.'admins/'.$databasename.'/application/config/database.php';
+        $file_contents = file_get_contents($path_to_file);
+        $file_contents = str_replace("createo",$databasename,$file_contents);
+        file_put_contents($path_to_file,$file_contents);
         
-		return 1;
-	}
-    
-    
-	public function beforeeditfieldselectfield( $id )
-	{
-		$this->db->where( 'id', $id );
-		$query=$this->db->get( 'fieldselectfield' )->row();
-		return $query;
-	}
-    
-	public function beforeeditfieldvalidation( $id )
-	{
-		$this->db->where( 'id', $id );
-		$query=$this->db->get( 'fieldvalidation' )->row();
-		return $query;
-	}
-    
-    
-	function deletefieldselectfield($id)
-	{
-		$query=$this->db->query("DELETE FROM `fieldselectfield` WHERE `id`='$id'");
-	}
-    
-    
-	function deletefieldvalidation($id)
-	{
-		$query=$this->db->query("DELETE FROM `fieldvalidation` WHERE `id`='$id'");
-	}
-    
-    
-    public function getfielddropdown()
-	{
-		$query=$this->db->query("SELECT * FROM `field`  ORDER BY `id` ASC")->result();
-		$return=array(
-		"" => ""
-		);
-		foreach($query as $row)
-		{
-			$return[$row->id]=$row->fieldname;
-		}
-		
-		return $return;
-	}
-    
-	public function beforeedit( $id )
-	{
-		$this->db->where( 'id', $id );
-		$query=$this->db->get( 'field' )->row();
-		return $query;
-	}
-	
-	public function editfield($id,$table,$sqlname,$sqltype,$isprimary,$defaultvalue,$isnull,$autoincrement,$title,$type,$placeholder,$showinview)
-	{
-		$data  = array(
-			'table' => $table,
-			'sqlname' => $sqlname,
-			'sqltype' => $sqltype,
-			'isprimary' => $isprimary,
-			'defaultvalue' => $defaultvalue,
-			'isnull' => $isnull,
-			'autoincrement' => $autoincrement,
-			'title' => $title,
-			'type' => $type,
-			'placeholder' => $placeholder,
-			'showinview' => $showinview
-			
-		  );
-		$this->db->where( 'id', $id );
-		$query=$this->db->update( 'field', $data );
+        //login file change with name of project
+        $path_to_file=$path_to_file.'admins/'.$databasename.'/application/views/login.php';
+        $file_contents = file_get_contents($path_to_file);
+        $file_contents = str_replace("CreateO",$projectname,$file_contents);
+        file_put_contents($path_to_file,$file_contents);
         
-		return 1;
-	}
-	function deletefield($id)
-	{
-		$query=$this->db->query("DELETE FROM `field` WHERE `id`='$id'");
-	}
-    
-    
-	public function getisprimarydropdown()
-	{
-		$isprimary= array(
-			 "TRUE" => "Yes",
-			 "FALSE" => "No",
-			);
-		return $isprimary;
-	}
-	
-	public function getisnulldropdown()
-	{
-		$isnull= array(
-			 "TRUE" => "Yes",
-			 "FALSE" => "No",
-			);
-		return $isnull;
-	}
-	
-	public function getautoincrementdropdown()
-	{
-		$autoincrement= array(
-			 "TRUE" => "Yes",
-			 "FALSE" => "No",
-			);
-		return $autoincrement;
-	}
-	
-	public function getisdefaultdropdown()
-	{
-		$isdefault= array(
-			 "yes" => "Yes",
-			 "no" => "No",
-			);
-		return $isdefault;
-	}
-	
-    public function getfieldtypedropdown()
-	{
-		$query=$this->db->query("SELECT * FROM `fieldtype`  ORDER BY `id` ASC")->result();
-		$return=array(
-		);
-		foreach($query as $row)
-		{
-			$return[$row->id]=$row->name;
-		}
-		
-		return $return;
-	}
-    
-    public function getsqltypedropdown()
-	{
-		$query=$this->db->query("SELECT * FROM `sqltype`  ORDER BY `id` ASC")->result();
-		$return=array(
-		);
-		foreach($query as $row)
-		{
-			$return[$row->id]=$row->name;
-		}
-		
-		return $return;
-	}
+    }
     
 }
 ?>

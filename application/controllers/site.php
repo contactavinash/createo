@@ -1866,6 +1866,8 @@ class Site extends CI_Controller
         $createpagecreatorreturn=$this->admin_model->createpagecreator($id);
         $editpagecreatorreturn=$this->admin_model->editpagecreator($id);
         
+        $otherappendsreturn=$this->admin_model->otherappends($id);
+        
 //        $data['alertsuccess']="Basic Backend Panel created Successfully.";
 //		$data['redirect']="site/index";
 //		$this->load->view("redirect",$data);
